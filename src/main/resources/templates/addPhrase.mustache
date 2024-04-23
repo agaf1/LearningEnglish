@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <form action="/user/{{userId}}/phrases/create" method="post">
+        Category of phrase (kategoria wyrazenia) <input type="text" name="categoryName"/><br>
+        Type of phrase (typ wyrazenia)  <br>
+                                        <input type="radio" id="WORD" name="typeOfPhrase" value="WORD"/>
+                                        <label for="WORD">WORD (slowka)</label><br>
+                                        <input type="radio" id="SENTENCE" name="typeOfPhrase" value="SENTENCE"/>
+                                        <label for="SENTENCE">SENTENCE (cale zdanie)</label><br>
+                                        <input type="radio" id="DIALOGUE" name="typeOfPhrase" value="DIALOGUE"/>
+                                        <label for="DIALOGUE">DIALOGUE (dialog) </label><br>
+        Phrase in polish (wyrazenie po polsku) <input type="text" name="polishVersion"><br>
+        Phrase in english (wyrazenie po angielsku) <input type="text" name="englishVersion"><br>
+        <input type="submit"/>
+    </form>
+    <div><br></div>
+    <li><a href="/user/{{userId}}/games"> USER PAGE (Strona uzytkownika) </a></li>
+</body>
+</html>

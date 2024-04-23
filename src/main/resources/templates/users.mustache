@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div> List of users: (Lista uzytkowników:)</div>
+    <div><br></div>
+    <ul>
+      {{#users}}
+      <li><a href = "/user/{{id}}/games"> {{id}} - {{name}} </a></li>
+      {{/users}}
+    </ul>
+    <li><a href = "/users/add"> ADD (DODAJ) </a></li>
+</body>
+</html>

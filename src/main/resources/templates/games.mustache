@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+        <div> Hello (Czesc)
+            <input type="text" name="userName" value="{{userName}}"/>
+        </div>
+        <div><br></div>
+        <li><a href="/user/{{userId}}/phrases"> Manage words (Zarzadzaj slowkami) </a></li>
+        <div><br></div>
+        <div> Select a game. (Wybierz gre.)</div>
+        <div><br></div>
+    <ul>
+        {{#games}}
+        <li><a href = "/user/{{userId}}/games/{{id}}"> {{id}} - {{name}} </a></li>
+        {{/games}}
+    </ul>
+        <div><br></div>
+        <div><br></div>
+        <li><a href="/home"> HOME (Strona startowa) </a></li>
+</body>
+</html>

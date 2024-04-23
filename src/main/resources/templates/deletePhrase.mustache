@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+        <form action="/user/{{userId}}/phrases/delete" method="post">
+            Find a phrase to delete by: (znajdz wyrazenie do usuniecia wedlug:)<br>
+            <input type="radio" id="ID" name="typeOfData" value="ID"/>
+            <label for="ID">ID</label><br>
+            <input type="radio" id="polishVersion" name="typeOfData" value="polishVersion"/>
+            <label for="polishVersion">Polish Version</label><br>
+            <input type="radio" id="englishVersion" name="typeOfData" value="englishVersion"/>
+            <label for="englishVersion">English Version</label><br>
+            Enter a value (podaj wartosc)<input type="text" name="value"/><br>
+            <input type="submit"/>
+        </form>
+        <div><br></div>
+        <li><a href="/user/{{userId}}/games"> USER PAGE (Strona uzytkownika) </a></li>
+</body>
+</html>
