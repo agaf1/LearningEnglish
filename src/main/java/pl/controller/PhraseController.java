@@ -10,14 +10,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.view.RedirectView;
 import pl.service.domain.Phrase;
 import pl.service.service.Exception.PhraseNotExistException;
-import pl.service.service.PhraseService;
 import pl.service.service.UserService;
 
 @Controller
 public class PhraseController {
 
-    @Autowired
-    private PhraseService phraseService;
     @Autowired
     private UserService userService;
     @Autowired

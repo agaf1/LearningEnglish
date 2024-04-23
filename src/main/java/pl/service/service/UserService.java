@@ -39,12 +39,8 @@ public class UserService {
                 Integer phraseId = Integer.valueOf(value);
                 phrase = phraseRepository.findById(phraseId);
             }
-            case "polishVersion"->{
-                phrase = phraseRepository.findByPolishVersion(value);
-            }
-            case "englishVersion" ->{
-                phrase = phraseRepository.findByEnglishVersion(value);
-            }
+            case "polishVersion"-> phrase = phraseRepository.findByPolishVersion(value);
+            case "englishVersion" -> phrase = phraseRepository.findByEnglishVersion(value);
             default->throw new PhraseNotExistException("This phrase was not founded.");
         }
         if(phrase.isEmpty()){

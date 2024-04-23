@@ -16,7 +16,6 @@ import pl.service.domain.User;
 import pl.service.service.GameService;
 import pl.service.service.UserService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.Mockito.when;

@@ -35,7 +35,7 @@ class UserRepositoryImp implements UserRepository {
             return false;
         }else {
            boolean result = userEntity.get().addNewPhraseEntity(mapperPhraseEntity.mapToPhraseEntity(phrase));
-           if(result == false){
+           if(!result){
                return false;
            }else{
                userJpa.save(userEntity.get());
@@ -50,7 +50,7 @@ class UserRepositoryImp implements UserRepository {
         if(userEntity.isPresent()) {
             boolean result = userEntity.get()
                     .removePhraseEntity(mapperPhraseEntity.mapToPhraseEntity(phrase));
-            if(result == true) {
+            if(result) {
                 userJpa.save(userEntity.get());
                 return true;
             }

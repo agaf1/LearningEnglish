@@ -6,7 +6,10 @@
 </head>
 <body>
     <form action="/user/{{userId}}/phrases/create" method="post">
-        Category of phrase (kategoria wyrazenia) <input type="text" name="categoryName"/><br>
+        <label>
+            Category of phrase (kategoria wyrazenia)
+            <input type="text" name="categoryName"/>
+        </label><br>
         Type of phrase (typ wyrazenia)  <br>
                                         <input type="radio" id="WORD" name="typeOfPhrase" value="WORD"/>
                                         <label for="WORD">WORD (slowka)</label><br>
@@ -14,8 +17,14 @@
                                         <label for="SENTENCE">SENTENCE (cale zdanie)</label><br>
                                         <input type="radio" id="DIALOGUE" name="typeOfPhrase" value="DIALOGUE"/>
                                         <label for="DIALOGUE">DIALOGUE (dialog) </label><br>
-        Phrase in polish (wyrazenie po polsku) <input type="text" name="polishVersion"><br>
-        Phrase in english (wyrazenie po angielsku) <input type="text" name="englishVersion"><br>
+        <label>
+            Phrase in polish (wyrazenie po polsku)
+            <input type="text" name="polishVersion">
+        </label><br>
+        <label>
+            Phrase in english (wyrazenie po angielsku)
+            <input type="text" name="englishVersion">
+        </label><br>
         <input type="submit"/>
     </form>
     <div><br></div>

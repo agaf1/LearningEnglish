@@ -12,7 +12,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import pl.service.domain.Phrase;
 import pl.service.domain.Type;
-import pl.service.service.PhraseService;
 import pl.service.service.UserService;
 
 import java.util.List;
@@ -33,8 +32,7 @@ class PhraseControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-    @MockBean
-    private PhraseService phraseService;
+
     @MockBean
     private UserService userService;
 
@@ -87,7 +85,7 @@ class PhraseControllerTest {
     public void should_create_new_phrase_and_redirect_to_other_view() throws Exception {
         //given
         Integer userId = 1;
-        List<String> listArgument = List.of("categoryName","WORD","polishVersion","englishVersion");
+        List<String> listArgument = List.of("categoryName", "WORD", "polishVersion", "englishVersion");
 
         Phrase phrase = new Phrase();
         phrase.setCategoryName("categoryName");
@@ -95,16 +93,16 @@ class PhraseControllerTest {
         phrase.setPolishVersion("polishVersion");
         phrase.setEnglishVersion("englishVersion");
 
-        when(userService.addPhrase(eq(userId),eq(phrase))).thenReturn(true);
+        when(userService.addPhrase(eq(userId), eq(phrase))).thenReturn(true);
 
         //when and then
-        MvcResult result = mockMvc.perform(post("/user/{userId}/phrases/create",userId)
-                        .param("categoryName",listArgument.get(0)
-                                ,"WORD",listArgument.get(1)
-                                ,"polishVersion",listArgument.get(2)
-                                ,"englishVersion",listArgument.get(3)))
+        MvcResult result = mockMvc.perform(post("/user/{userId}/phrases/create", userId)
+                        .param("categoryName", listArgument.get(0)
+                                , "WORD", listArgument.get(1)
+                                , "polishVersion", listArgument.get(2)
+                                , "englishVersion", listArgument.get(3)))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/user/"+ String.valueOf(userId)+"/phrases"))
+                .andExpect(redirectedUrl("/user/" + userId + "/phrases"))
                 .andReturn();
     }
 
@@ -115,13 +113,13 @@ class PhraseControllerTest {
         String typeOfData = "ID";
         String value = "1";
 
-        when(userService.deletePhrase(eq(userId),eq(typeOfData),eq(value))).thenReturn(true);
+        when(userService.deletePhrase(eq(userId), eq(typeOfData), eq(value))).thenReturn(true);
 
         //when and then
-        MvcResult result = mockMvc.perform(post("/user/{userId}/phrases/delete",userId)
-                .param("typeOfData",typeOfData,"value",value))
+        MvcResult result = mockMvc.perform(post("/user/{userId}/phrases/delete", userId)
+                        .param("typeOfData", typeOfData, "value", value))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/user/"+String.valueOf(userId)+"/phrases"))
+                .andExpect(redirectedUrl("/user/" + userId + "/phrases"))
                 .andReturn();
 
     }
