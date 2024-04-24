@@ -5,23 +5,23 @@
     <title>Title</title>
 </head>
 <body>
-        <div>
-            <label>
-                <input type="text" name="userName" value="{{userName}}"/>
-                Select category of phrase (wybierz kategorie wyrazen)
-            </label>
-            Select category of phrase (wybierz kategorie wyrazen)</div>
-        <div><br></div>
+<div>
+    <label>
+        <input type="text" name="userName" value="{{userName}}"/>
+        Select category of phrase (wybierz kategorie wyrazen)
+    </label>
+</div>
+<div><br></div>
 
-        <ul>
-        {{#categories}}
+<ul>
+    {{#categories}}
         <li><a href="/user/{{userId}}/games/{{gameId}}/{{.}}"> {{.}} </a></li>
-         {{/categories}}
-        </ul>
-        <div><br></div>
-        <li><a href="/user/{{userId}}/games"> USER PAGE (Strona uzytkownika) </a></li>
-        <div><br></div>
-        <li><a href="/home"> HOME (Strona startowa) </a></li>
+    {{/categories}}
+</ul>
+<div><br></div>
+<li><a href="/user/{{userId}}/games"> USER PAGE (Strona uzytkownika) </a></li>
+<div><br></div>
+<li><a href="/home"> HOME (Strona startowa) </a></li>
 
 </body>
 </html>
