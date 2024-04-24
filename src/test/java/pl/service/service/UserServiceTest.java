@@ -71,7 +71,7 @@ class UserServiceTest {
     }
 
     @Test
-    public void should_throw_PhraseNotExistException_when_call_deletePhrase_method() throws PhraseNotExistException {
+    public void should_throw_PhraseNotExistException_when_call_deletePhrase_method(){
         //given
         Integer userId =1;
         String typeOfData = "polishVersion";
