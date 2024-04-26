@@ -8,5 +8,6 @@ import pl.service.domain.Game;
 interface MapperGameEntity {
 
     Game mapToGame(GameEntity gameEntity);
+
     GameEntity mapToEntity(Game game);
 }

@@ -1,6 +1,7 @@
 package pl.repository;
 
 import jakarta.persistence.*;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,9 +12,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "users")
-@Getter
-@Setter
-@NoArgsConstructor
+@Data
  class UserEntity {
 
     @Id
@@ -21,7 +20,6 @@ import java.util.Set;
     private Integer id;
 
     private String name;
-
 
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private Set<PhraseEntity> phrases = new HashSet<>();

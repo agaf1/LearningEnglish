@@ -1,18 +1,18 @@
 package pl.repository;
 
 import jakarta.persistence.*;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.type.NumericBooleanConverter;
 import pl.service.domain.Type;
 
 import java.util.Objects;
 
 @Entity
 @Table(name = "phrases")
-@NoArgsConstructor
-@Getter
-@Setter
+@Data
 class PhraseEntity {
 
     @Id
@@ -24,8 +24,9 @@ class PhraseEntity {
     private Type typeOfPhrase;
     private String polishVersion;
     private String englishVersion;
+    @Convert(converter = NumericBooleanConverter.class)
     private boolean alreadyKnown;
-    private int numberOfRepetitions;
+    private Integer numberOfRepetitions;
 
 
     @Override

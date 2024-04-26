@@ -1,5 +1,6 @@
 package pl.repository;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import pl.service.domain.Phrase;
@@ -7,12 +8,11 @@ import pl.service.domain.Phrase;
 import java.util.Optional;
 
 @Repository
+@RequiredArgsConstructor
 class PhraseRepositoryImp implements PhraseRepository{
 
-    @Autowired
-    private PhraseJpa phraseJpa;
-    @Autowired
-    private MapperPhraseEntity mapperPhraseEntity;
+    private final PhraseJpa phraseJpa;
+    private final MapperPhraseEntity mapperPhraseEntity;
 
     @Override
     public Phrase add(Phrase phrase) {

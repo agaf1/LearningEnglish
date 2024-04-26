@@ -1,5 +1,6 @@
 package pl.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,9 +13,15 @@ import pl.service.service.UserService;
 
 import java.util.List;
 
+
 @Controller
 public class UserController {
 
+    //TODO zalecana praktyka jest wstrzykiwanie przez kontruktor, ulatwia to psianie testow
+    // https://nofluffjobs.com/pl/log/wiedza-it/dependency-injection-w-springu/
+    // informacje w sekcji Który sposób wstrzykiwania zależności wybrać?
+
+    // lombok ulatw wstrzykniecie przez kontstruktor uzywajac @RequiredArgsConstructor
     @Autowired
     private UserService userService;
     @Autowired

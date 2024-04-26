@@ -2,6 +2,7 @@ package pl.repository;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import pl.service.domain.Phrase;
 
 import java.util.List;
 

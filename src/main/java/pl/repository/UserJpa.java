@@ -12,10 +12,13 @@ interface UserJpa extends CrudRepository<UserEntity, Integer> {
             """)
     List<UserEntity> findAll();
 
-    @Query(value = """
-            select distinct phrases.category_name from phrases
-             where phrases.id
-             in (select phrases_id from users_phrases where user_entity_id=:userId)
-            """,nativeQuery = true)
+    @Query("""
+            select distinct p.categoryName from UserEntity u join u.phrases p where u.id=:userId
+            """)
     List<String> findAllCategoriesForUser(Integer userId);
+
+    @Query("""
+            select p from UserEntity u join u.phrases p where u.id=:userId and p.categoryName=:categoryName
+            """)
+    List<PhraseEntity> findByCategoryName(Integer userId, String categoryName);
 }

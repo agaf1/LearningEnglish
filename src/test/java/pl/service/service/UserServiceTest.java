@@ -11,6 +11,7 @@ import pl.repository.UserRepository;
 import pl.service.domain.Phrase;
 import pl.service.domain.User;
 import pl.service.service.Exception.PhraseNotExistException;
+import pl.service.service.Exception.UserNotExistException;
 
 import java.util.Optional;
 
@@ -38,7 +39,7 @@ class UserServiceTest {
     }
 
     @Test
-    public void should_call_the_method_addPhrase_from_userRepository(){
+    public void should_call_the_method_addPhrase_from_userRepository() throws UserNotExistException {
         //given
         Integer userId = 1;
         Phrase phrase = new Phrase();
@@ -48,6 +49,8 @@ class UserServiceTest {
         Mockito.verify(userRepository,Mockito.atLeastOnce()).addPhrase(eq(userId),eq(phrase));
     }
 
+    //TODO to sie nadaje na test sparametryzowany
+    //https://www.baeldung.com/parameterized-tests-junit-5
     @Test
     public void should_call_the_method_deleteUserPhrase_from_userRepository() throws PhraseNotExistException {
         //given
@@ -63,6 +66,7 @@ class UserServiceTest {
         Mockito.when(phraseRepository.findByPolishVersion(eq(value2))).thenReturn(Optional.of(phrase));
         Mockito.when(phraseRepository.findByEnglishVersion(eq(value3))).thenReturn(Optional.of(phrase));
         //when
+
         userService.deletePhrase(userId,typeOfData1,value1);
         userService.deletePhrase(userId,typeOfDate2,value2);
         userService.deletePhrase(userId,typeOfData3,value3);

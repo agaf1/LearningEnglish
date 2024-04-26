@@ -6,6 +6,6 @@ import java.util.List;
 
 
 public interface GameRepository {
-
     List<Game> findAll();
+
 }

@@ -27,7 +27,7 @@ public class UserService {
     }
 
     @Transactional
-    public boolean addPhrase(Integer userId, Phrase phrase) {
+    public boolean addPhrase(Integer userId, Phrase phrase) throws UserNotExistException {
         return userRepository.addPhrase(userId, phrase);
     }
 
@@ -43,6 +43,9 @@ public class UserService {
             case "englishVersion" -> phrase = phraseRepository.findByEnglishVersion(value);
             default->throw new PhraseNotExistException("This phrase was not founded.");
         }
+
+        //TODO agdyby to uproscic i pozbyc sie if i jeszcze nie trzeba by phrase.get()
+        // var p = phrase.orElseGet(()->throw new PhraseNotExistException("This phrase was not founded."));
         if(phrase.isEmpty()){
             throw new PhraseNotExistException("This phrase was not founded.");
         }

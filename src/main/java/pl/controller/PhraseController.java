@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.view.RedirectView;
 import pl.service.domain.Phrase;
 import pl.service.service.Exception.PhraseNotExistException;
+import pl.service.service.Exception.UserNotExistException;
 import pl.service.service.UserService;
 
 @Controller
@@ -33,7 +34,7 @@ public class PhraseController {
     }
 
     @PostMapping(path = "/user/{userId}/phrases/create")
-    public RedirectView createNewPhrase(@PathVariable Integer userId, @ModelAttribute PhraseDto phraseDto) {
+    public RedirectView createNewPhrase(@PathVariable Integer userId, @ModelAttribute PhraseDto phraseDto) throws UserNotExistException {
         Phrase phrase = phraseMapper.mapToPhrase(phraseDto);
         userService.addPhrase(userId, phrase);
         return new RedirectView("/user/{userId}/phrases");
