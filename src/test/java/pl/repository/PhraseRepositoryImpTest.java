@@ -26,11 +26,11 @@ class PhraseRepositoryImpTest {
         Phrase savedPhrase2 = phraseRepository.add(createNewPhrase());
 
         //when
-        Optional<Phrase> actualPhrase1 = phraseRepository.findById(savedPhrase1.getId());
-        Optional<Phrase> actualPhrase2 = phraseRepository.findById(savedPhrase2.getId());
+        Phrase actualPhrase1 = phraseRepository.findById(savedPhrase1.getId()).get();
+        Phrase actualPhrase2 = phraseRepository.findById(savedPhrase2.getId()).get();
         //then
-        assertThat(actualPhrase1.get()).isEqualTo(savedPhrase1);
-        assertThat(actualPhrase2.get()).isEqualTo(savedPhrase2);
+        assertThat(actualPhrase1).isEqualTo(savedPhrase1);
+        assertThat(actualPhrase2).isEqualTo(savedPhrase2);
     }
 
     @Test

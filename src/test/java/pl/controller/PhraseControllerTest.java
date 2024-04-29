@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import pl.repository.UserRepository;
 import pl.service.domain.Phrase;
 import pl.service.domain.Type;
 import pl.service.service.UserService;

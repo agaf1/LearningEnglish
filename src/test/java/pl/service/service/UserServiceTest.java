@@ -4,10 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.jupiter.params.provider.ValueSource;
-import org.junit.runners.Parameterized;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -117,6 +114,17 @@ class UserServiceTest {
         userService.findAllCategoriesForUser(userId);
         //then
         Mockito.verify(userRepository, Mockito.atLeastOnce()).findAllCategoriesForUser(eq(userId));
+    }
+
+    @Test
+    public void should_throw_exception_when_user_is_not_exist(){
+        //given
+        Integer userId = 3;
+        //when
+        //then
+        assertThatThrownBy(()->userService.findByIdOrThrow(userId))
+                .isInstanceOf(UserNotExistException.class)
+                .hasMessage("User with  id {} is not exist",userId);
     }
 
 

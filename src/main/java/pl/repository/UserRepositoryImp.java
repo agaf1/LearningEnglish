@@ -62,7 +62,7 @@ class UserRepositoryImp implements UserRepository {
     @Override
     public List<Phrase> findByCategoryName(Integer userId, String categoryName) {
         return userJpa.findByCategoryName(userId, categoryName)
-                .stream().map(p -> mapperPhraseEntity.mapToPhrase(p))
+                .stream().map(mapperPhraseEntity::mapToPhrase)
                 .toList();
     }
 }
