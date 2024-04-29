@@ -4,41 +4,47 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.transaction.annotation.Transactional;
 import pl.service.domain.Game;
 
 import java.util.List;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
+@Sql("/clean-db.sql")
 class GameRepositoryImpTest {
 
     @Autowired
     private GameRepositoryImp gameRepositoryImp;
-    @Autowired
-    private GameJpa gameJpa;
-    @Autowired
-    private MapperGameEntity mapperGameEntity;
 
     @Test
-    @Sql(statements = "SET FOREIGN_KEY_CHECKS = 0")
-    @Sql(statements = "truncate game_table")
-    @Sql(statements = "truncate games")
-    @Sql(statements = "truncate phrases")
-    @Sql(statements = "truncate users")
-    @Sql(statements = "truncate users_phrases")
-    @Sql(statements = "SET FOREIGN_KEY_CHECKS = 1")
-    public void should_get_all_games(){
+    public void should_save_game_into_DB() {
         //given
-        Game game1 = new Game(null,"game1");
-        Game game2 = new Game(null,"game2");
-        Game game3 = new Game(null,"game3");
-        gameJpa.save(mapperGameEntity.mapToEntity(game1));
-        gameJpa.save(mapperGameEntity.mapToEntity(game2));
-        gameJpa.save(mapperGameEntity.mapToEntity(game3));
+        Game game = new Game(null, "game1");
         //when
-        List<Game> games = gameRepositoryImp.findAll();
+        Game savedGame = gameRepositoryImp.save(game);
         //then
-        assertThat(games.size()).isEqualTo(3);
+        assertThat(savedGame.id()).isNotNull();
+        assertThat(savedGame).isEqualTo(gameRepositoryImp.findByIdOrThrow(savedGame.id()));
+    }
+
+    @Test
+    public void should_get_all_games() {
+        //given
+        Game game1 = new Game(null, "game1");
+        Game game2 = new Game(null, "game2");
+        Game game3 = new Game(null, "game3");
+        var expectedGames = Set.of(game1, game2, game3);
+
+        expectedGames.forEach(g -> gameRepositoryImp.save(g));
+        //when
+        List<Game> actualGames = gameRepositoryImp.findAll();
+        //then
+        assertThat(actualGames.size()).isEqualTo(expectedGames.size());
+
+        assertThat(actualGames).extracting("name")
+                .containsAnyElementsOf(expectedGames.stream().map(Game::name).toList());
     }
 }

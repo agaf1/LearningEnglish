@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import pl.repository.UserRepository;
 import pl.service.domain.Phrase;
 import pl.service.domain.Type;
 import pl.service.service.UserService;
@@ -17,8 +18,6 @@ import pl.service.service.UserService;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -27,7 +26,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(MockitoExtension.class)
 @WebMvcTest(PhraseController.class)
 @Import({PhraseMapperImpl.class})
-//@AutoConfigureMockMvc
 class PhraseControllerTest {
 
     @Autowired
@@ -93,8 +91,6 @@ class PhraseControllerTest {
         phrase.setPolishVersion("polishVersion");
         phrase.setEnglishVersion("englishVersion");
 
-        when(userService.addPhrase(eq(userId), eq(phrase))).thenReturn(true);
-
         //when and then
         MvcResult result = mockMvc.perform(post("/user/{userId}/phrases/create", userId)
                         .param("categoryName", listArgument.get(0)
@@ -113,14 +109,11 @@ class PhraseControllerTest {
         String typeOfData = "ID";
         String value = "1";
 
-        when(userService.deletePhrase(eq(userId), eq(typeOfData), eq(value))).thenReturn(true);
-
         //when and then
         MvcResult result = mockMvc.perform(post("/user/{userId}/phrases/delete", userId)
                         .param("typeOfData", typeOfData, "value", value))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/user/" + userId + "/phrases"))
                 .andReturn();
-
     }
 }

@@ -1,13 +1,8 @@
 package pl.service.domain;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 
-//TODO mozna uzyc jednej adnotacji @Data
-@Getter
-@Setter
-@NoArgsConstructor
+@Data
 public class GameTable {
 
     private Integer id;

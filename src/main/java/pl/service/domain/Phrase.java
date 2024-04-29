@@ -1,14 +1,9 @@
 package pl.service.domain;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 
-//TODO mozna uzyc jednej adnotacji @Data
 
-@Getter
-@Setter
-@NoArgsConstructor
+@Data
 public class Phrase {
 
     private Integer id;
@@ -18,6 +13,4 @@ public class Phrase {
     private String englishVersion;
     private boolean alreadyKnown;
     private int numberOfRepetitions;
-
-
 }

@@ -1,5 +1,6 @@
 package pl.controller;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,32 +18,26 @@ import java.util.List;
 
 @Controller
 @Slf4j
+@RequiredArgsConstructor
 public class GameController {
 
-    @Autowired
-    private GameService gameService;
-    @Autowired
-    private UserService userService;
+    private final GameService gameService;
+    private final UserService userService;
 
     @GetMapping(path = "/user/{userId}/games")
-    public String showAllGames(@PathVariable  int userId, Model model) {
+    public String showAllGames(@PathVariable int userId, Model model) {
         try {
             User user = userService.findByIdOrThrow(userId);
 
             List<Game> games = gameService.showAll();
             String userName = user.name();
-            //TODO mozna przekazac do widoku caly obiekt user bedzie mniej kodu
-            // np.              model.addAttribute("user", user);
             model.addAttribute("userName", userName);
             model.addAttribute("userId", userId);
             model.addAttribute("games", games);
             return "games";
         } catch (UserNotExistException e) {
-            //TODO dobra praktyka jest logowanie bledow, umozliwia to pozniej analize co poszlo nie tak
-            log.error("User not exists userId="+userId,e);
-            //TODO nie wyswietał bym tresci wujatku , tylko stworzul wlasny opis
-            // np. String message = "User not found";
-            String message = e.getMessage();
+            log.error("User not exists userId=" + userId, e);
+            String message = "User not found";
             model.addAttribute("message", message);
             return "exception";
         }
@@ -51,20 +46,20 @@ public class GameController {
     @GetMapping(path = "/user/{userId}/games/{gameId}")
     public String showAllCategoryOfPhrasesForThisUser(
             @PathVariable int userId, @PathVariable int gameId, Model model) throws UserNotExistException {
-            List<String> categories = userService.findAllCategoriesForUser(userId);
-            String userName = userService.findByIdOrThrow(userId).name();
-            model.addAttribute("userName", userName);
-            model.addAttribute("userId", userId);
-            model.addAttribute("gameId",gameId);
-            model.addAttribute("categories", categories);
+        List<String> categories = userService.findAllCategoriesForUser(userId);
+        String userName = userService.findByIdOrThrow(userId).name();
+        model.addAttribute("userName", userName);
+        model.addAttribute("userId", userId);
+        model.addAttribute("gameId", gameId);
+        model.addAttribute("categories", categories);
         return "games-categoryPhrase";
     }
 
     @PostMapping(path = "/user/{userId}/games/{gameId}/{categoryName}")
     public void startTheGame(@PathVariable Integer userId,
                              @PathVariable Integer gameId,
-                             @PathVariable String categoryName){
-        gameService.prepareTheGame(userId,gameId,categoryName);
+                             @PathVariable String categoryName) {
+        gameService.prepareTheGame(userId, gameId, categoryName);
 
     }
 

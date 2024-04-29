@@ -12,9 +12,9 @@ public interface UserRepository {
 
     User addNew(User user);
 
-    boolean addPhrase(Integer userId, Phrase phrase) throws UserNotExistException;
+    void addPhrase(Integer userId, Phrase phrase) throws UserNotExistException;
 
-    boolean deleteUserPhrase(Integer userId, Phrase phrase);
+    void deleteUserPhrase(Integer userId, Phrase phrase);
 
 
     List<User> getAll();

@@ -24,29 +24,23 @@ class UserRepositoryImp implements UserRepository {
     }
 
     @Override
-    public boolean addPhrase(Integer userId, Phrase phrase) {
+    public void addPhrase(Integer userId, Phrase phrase) {
 
         UserEntity userEntity = userJpa.findById(userId).orElseThrow();
 
-        boolean result = userEntity.addNewPhraseEntity(mapperPhraseEntity.mapToPhraseEntity(phrase));
+        userEntity.addNewPhraseEntity(mapperPhraseEntity.mapToPhraseEntity(phrase));
 
-        if (result == true) {
-            userJpa.save(userEntity);
-        }
-        return result;
+        userJpa.save(userEntity);
     }
 
     @Override
-    public boolean deleteUserPhrase(Integer userId, Phrase phrase) {
+    public void deleteUserPhrase(Integer userId, Phrase phrase) {
 
         UserEntity userEntity = userJpa.findById(userId).orElseThrow();
 
-        boolean result = userEntity.removePhraseEntity(mapperPhraseEntity.mapToPhraseEntity(phrase));
+        userEntity.removePhraseEntity(mapperPhraseEntity.mapToPhraseEntity(phrase));
 
-        if (result) {
-            userJpa.save(userEntity);
-        }
-        return result;
+        userJpa.save(userEntity);
     }
 
     @Override

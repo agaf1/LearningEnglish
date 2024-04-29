@@ -24,13 +24,12 @@ import java.util.Set;
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private Set<PhraseEntity> phrases = new HashSet<>();
 
-
-    boolean addNewPhraseEntity(PhraseEntity phraseEntity){
-        return this.phrases.add(phraseEntity);
+    void addNewPhraseEntity(PhraseEntity phraseEntity){
+        this.phrases.add(phraseEntity);
     }
 
-    boolean removePhraseEntity(PhraseEntity phraseEntity){
-       return this.phrases.remove(phraseEntity);
+    void removePhraseEntity(PhraseEntity phraseEntity){
+       this.phrases.remove(phraseEntity);
     }
 
     @Override

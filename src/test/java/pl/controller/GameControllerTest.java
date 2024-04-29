@@ -5,9 +5,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -20,22 +20,22 @@ import java.util.List;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 @ExtendWith(SpringExtension.class)
 @ExtendWith(MockitoExtension.class)
-@SpringBootTest
-@AutoConfigureMockMvc
+@WebMvcTest(GameController.class)
+@Import({UserMapperImpl.class})
 class GameControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-
-
-    @MockBean
-    private GameService gameService;
     @MockBean
     private UserService userService;
+    @MockBean
+    private GameService gameService;
+
 
     @Test
     public void should_show_list_of_games() throws Exception {
@@ -47,8 +47,8 @@ class GameControllerTest {
         User user = new User(123, "name");
 
         //when
-        when(gameService.showAll()).thenReturn(games);
         when(userService.findByIdOrThrow(user.id())).thenReturn(user);
+        when(gameService.showAll()).thenReturn(games);
 
         MvcResult result = mockMvc.perform(get("/user/{userId}/games",user.id()))
                 .andExpect(status().isOk())

@@ -27,29 +27,26 @@ public class UserService {
     }
 
     @Transactional
-    public boolean addPhrase(Integer userId, Phrase phrase) throws UserNotExistException {
-        return userRepository.addPhrase(userId, phrase);
+    public void addPhrase(Integer userId, Phrase phrase) throws UserNotExistException {
+        userRepository.addPhrase(userId, phrase);
     }
 
     @Transactional
-    public boolean deletePhrase(Integer userId, String typeOfData, String value) throws PhraseNotExistException {
+    public void deletePhrase(Integer userId, String typeOfData, String value) throws PhraseNotExistException {
         Optional<Phrase> phrase;
         switch (typeOfData) {
-            case "ID"-> {
+            case "ID" -> {
                 Integer phraseId = Integer.valueOf(value);
                 phrase = phraseRepository.findById(phraseId);
             }
-            case "polishVersion"-> phrase = phraseRepository.findByPolishVersion(value);
+            case "polishVersion" -> phrase = phraseRepository.findByPolishVersion(value);
             case "englishVersion" -> phrase = phraseRepository.findByEnglishVersion(value);
-            default->throw new PhraseNotExistException("This phrase was not founded.");
+            default -> throw new PhraseNotExistException("This phrase was not founded.");
         }
 
-        //TODO agdyby to uproscic i pozbyc sie if i jeszcze nie trzeba by phrase.get()
-        // var p = phrase.orElseGet(()->throw new PhraseNotExistException("This phrase was not founded."));
-        if(phrase.isEmpty()){
-            throw new PhraseNotExistException("This phrase was not founded.");
-        }
-        return userRepository.deleteUserPhrase(userId,phrase.get());
+        var p = phrase.orElseThrow(() -> new PhraseNotExistException("This phrase was not founded."));
+
+        userRepository.deleteUserPhrase(userId, p);
     }
 
     public List<User> getAll() {
@@ -61,7 +58,7 @@ public class UserService {
                 .orElseThrow(() -> new UserNotExistException(String.format("User with  id {} is not exist", id)));
     }
 
-    public List<String> findAllCategoriesForUser(Integer userId){
+    public List<String> findAllCategoriesForUser(Integer userId) {
         return userRepository.findAllCategoriesForUser(userId);
     }
 

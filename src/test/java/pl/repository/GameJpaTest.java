@@ -10,19 +10,14 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
+@Sql("/clean-db.sql")
 class GameJpaTest {
 
     @Autowired
     private GameJpa gameJpa;
 
+
     @Test
-    @Sql(statements = "SET FOREIGN_KEY_CHECKS = 0")
-    @Sql(statements = "truncate game_table")
-    @Sql(statements = "truncate games")
-    @Sql(statements = "truncate phrases")
-    @Sql(statements = "truncate users")
-    @Sql(statements = "truncate users_phrases")
-    @Sql(statements = "SET FOREIGN_KEY_CHECKS = 1")
     public void should_find_all_games(){
         //given
         GameEntity game1 = createNew("game1");

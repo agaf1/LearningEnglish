@@ -1,6 +1,6 @@
 package pl.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,12 +14,11 @@ import pl.service.service.Exception.UserNotExistException;
 import pl.service.service.UserService;
 
 @Controller
+@RequiredArgsConstructor
 public class PhraseController {
 
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private PhraseMapper phraseMapper;
+    private final PhraseMapper phraseMapper;
+    private final UserService userService;
 
     @GetMapping(path = "/user/{userId}/phrases")
     public String managePhrases(@PathVariable Integer userId, Model model) {
@@ -41,14 +40,14 @@ public class PhraseController {
     }
 
     @GetMapping(path = "/user/{userId}/phrases/deleteForm")
-    public String deletePhraseForm(@PathVariable Integer userId, Model model){
+    public String deletePhraseForm(@PathVariable Integer userId, Model model) {
         model.addAttribute("userId", userId);
         return "deletePhrase";
     }
 
     @PostMapping(path = "/user/{userId}/phrases/delete")
     public RedirectView deletePhraseFromDB(@PathVariable Integer userId, String typeOfData, String value) throws PhraseNotExistException {
-        userService.deletePhrase(userId,typeOfData,value);
+        userService.deletePhrase(userId, typeOfData, value);
         return new RedirectView("/user/{userId}/phrases");
     }
 

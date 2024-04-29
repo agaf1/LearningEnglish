@@ -16,20 +16,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
+@Sql("/clean-db.sql")
 class UserRepositoryImpTest {
 
     @Autowired
     private UserRepositoryImp userRepositoryImp;
 
     @Test
-    @Sql(statements = "SET FOREIGN_KEY_CHECKS = 0")
-    @Sql(statements = "truncate game_table")
-    @Sql(statements = "truncate games")
-    @Sql(statements = "truncate phrases")
-    @Sql(statements = "truncate users")
-    @Sql(statements = "truncate users_phrases")
-    @Sql(statements = "SET FOREIGN_KEY_CHECKS = 1")
-    public void should_add_new_user(){
+    public void should_add_new_user() {
         //given
         User user = createNewUser("name1");
         //when
@@ -40,159 +34,68 @@ class UserRepositoryImpTest {
     }
 
     @Test
-    @Sql(statements = "SET FOREIGN_KEY_CHECKS = 0")
-    @Sql(statements = "truncate game_table")
-    @Sql(statements = "truncate games")
-    @Sql(statements = "truncate phrases")
-    @Sql(statements = "truncate users")
-    @Sql(statements = "truncate users_phrases")
-    @Sql(statements = "SET FOREIGN_KEY_CHECKS = 1")
-    public void should_add_phrase_to_user(){
+    public void should_add_phrase_to_user() {
         //given
         User user = createNewUser("name1");
         User savedUser = userRepositoryImp.addNew(user);
-        Integer userId = savedUser.id();
-        Phrase phrase = createNewPhrase();
         //when
-        boolean result = userRepositoryImp.addPhrase(userId,phrase);
+        userRepositoryImp.addPhrase(savedUser.id(), createNewPhrase());
         //then
-        assertThat(result).isEqualTo(true);
+        User actualUser = userRepositoryImp.findUserById(savedUser.id()).get();
+        assertThat(actualUser.phrases().size()).isEqualTo(1);
     }
 
     @Test
-    @Sql(statements = "SET FOREIGN_KEY_CHECKS = 0")
-    @Sql(statements = "truncate game_table")
-    @Sql(statements = "truncate games")
-    @Sql(statements = "truncate phrases")
-    @Sql(statements = "truncate users")
-    @Sql(statements = "truncate users_phrases")
-    @Sql(statements = "SET FOREIGN_KEY_CHECKS = 1")
-    public void should_throw_exception_when_add_phrase_to_not_exist_user(){
+    public void should_throw_exception_when_add_phrase_to_not_exist_user() {
         //given
         User user = createNewUser("name1");
-        User savedUser = userRepositoryImp.addNew(user);
-        Integer userId = savedUser.id();
-        Phrase phrase = createNewPhrase();
+        userRepositoryImp.addNew(user);
+
         //when
         //then
-        if(userId != 2) {
-            assertThatThrownBy(()->userRepositoryImp.addPhrase(2,phrase))
-                    .isInstanceOf(NoSuchElementException.class);
-        }else{
-            assertThatThrownBy(()->userRepositoryImp.addPhrase(3,phrase))
-                    .isInstanceOf(NoSuchElementException.class);
-        }
+        assertThatThrownBy(() -> userRepositoryImp.addPhrase(2, createNewPhrase()))
+                .isInstanceOf(NoSuchElementException.class);
     }
 
     @Test
-    @Sql(statements = "SET FOREIGN_KEY_CHECKS = 0")
-    @Sql(statements = "truncate game_table")
-    @Sql(statements = "truncate games")
-    @Sql(statements = "truncate phrases")
-    @Sql(statements = "truncate users")
-    @Sql(statements = "truncate users_phrases")
-    @Sql(statements = "SET FOREIGN_KEY_CHECKS = 1")
-    public void should_delete_phrase_from_user_list_of_phrases(){
+    public void should_delete_phrase_from_user() {
         //given
         User user1 = createNewUser("user1");
         User savedUser1 = userRepositoryImp.addNew(user1);
-        User user2 = createNewUser("user2");
-        User savedUser2 = userRepositoryImp.addNew(user2);
-        Phrase phrase1 = createNewPhrase();
-        Phrase phrase2 = createNewPhrase();
-        userRepositoryImp.addPhrase(savedUser1.id(),phrase1);
-        userRepositoryImp.addPhrase(savedUser1.id(),phrase2);
-        userRepositoryImp.addPhrase(savedUser2.id(),phrase1);
-        userRepositoryImp.addPhrase(savedUser2.id(),phrase2);
 
-        User user1FromDB = userRepositoryImp.findUserById(savedUser1.id()).get();
-        Phrase phraseToDelete = user1FromDB.phrases().get(0);
+        userRepositoryImp.addPhrase(savedUser1.id(), createNewPhrase());
+        userRepositoryImp.addPhrase(savedUser1.id(), createNewPhrase());
+
+        User actualUser1 = userRepositoryImp.findUserById(savedUser1.id()).get();
+        Phrase phraseToDelete = actualUser1.phrases().get(0);
 
         //when
-        boolean result = userRepositoryImp.deleteUserPhrase(savedUser1.id(),phraseToDelete);
+        userRepositoryImp.deleteUserPhrase(savedUser1.id(), phraseToDelete);
 
         //then
-        assertThat(result).isEqualTo(true);
-
-        user1FromDB = userRepositoryImp.findUserById(savedUser1.id()).get();
-        assertThat(user1FromDB.phrases().size()).isEqualTo(1);
-
-        User user2FromDB = userRepositoryImp.findUserById(savedUser2.id()).get();
-        assertThat(user2FromDB.phrases().size()).isEqualTo(2);
+        actualUser1 = userRepositoryImp.findUserById(savedUser1.id()).get();
+        assertThat(actualUser1.phrases().size()).isEqualTo(1);
+        assertThat(actualUser1.phrases()).doesNotContain(phraseToDelete);
     }
+
+
+
     @Test
-    @Sql(statements = "SET FOREIGN_KEY_CHECKS = 0")
-    @Sql(statements = "truncate game_table")
-    @Sql(statements = "truncate games")
-    @Sql(statements = "truncate phrases")
-    @Sql(statements = "truncate users")
-    @Sql(statements = "truncate users_phrases")
-    @Sql(statements = "SET FOREIGN_KEY_CHECKS = 1")
-    public void should_return_false_when_not_delete_phrase(){
+    public void should_throw_exception_when_call_delete_phrase_method_with_wrong_userId() {
         //given
         User user1 = createNewUser("user1");
         User savedUser1 = userRepositoryImp.addNew(user1);
-        User user2 = createNewUser("user2");
-        User savedUser2 = userRepositoryImp.addNew(user2);
-        Phrase phrase1 = createNewPhrase();
-        Phrase phrase2 = createNewPhrase();
-        userRepositoryImp.addPhrase(savedUser1.id(),phrase1);
-        userRepositoryImp.addPhrase(savedUser1.id(),phrase2);
-        userRepositoryImp.addPhrase(savedUser2.id(),phrase1);
-        userRepositoryImp.addPhrase(savedUser2.id(),phrase2);
-
-        Phrase phraseToDelete = createNewPhrase();
-        phraseToDelete.setId(10);
-
+        userRepositoryImp.addPhrase(savedUser1.id(), createNewPhrase());
+        User actualUser1 = userRepositoryImp.findUserById(savedUser1.id()).get();
+        Phrase phraseToDelete = actualUser1.phrases().get(0);
         //when
-        boolean result = userRepositoryImp.deleteUserPhrase(savedUser1.id(),phraseToDelete);
-
         //then
-        assertThat(result).isEqualTo(false);
-
-        User user1FromDB = userRepositoryImp.findUserById(savedUser1.id()).get();
-        assertThat(user1FromDB.phrases().size()).isEqualTo(2);
-
-        User user2FromDB = userRepositoryImp.findUserById(savedUser2.id()).get();
-        assertThat(user2FromDB.phrases().size()).isEqualTo(2);
+        assertThatThrownBy(() -> userRepositoryImp.deleteUserPhrase(2, phraseToDelete))
+                .isInstanceOf(NoSuchElementException.class);
     }
 
     @Test
-    @Sql(statements = "SET FOREIGN_KEY_CHECKS = 0")
-    @Sql(statements = "truncate game_table")
-    @Sql(statements = "truncate games")
-    @Sql(statements = "truncate phrases")
-    @Sql(statements = "truncate users")
-    @Sql(statements = "truncate users_phrases")
-    @Sql(statements = "SET FOREIGN_KEY_CHECKS = 1")
-    public void should_throw_exception_when_call_delete_phrase_method_with_wrong_userId(){
-        //given
-        User user1 = createNewUser("user1");
-        User savedUser1 = userRepositoryImp.addNew(user1);
-        Phrase phrase = createNewPhrase();
-        userRepositoryImp.addPhrase(savedUser1.id(),phrase);
-        User user1FromDB = userRepositoryImp.findUserById(savedUser1.id()).get();
-        Phrase phraseToDelete = user1FromDB.phrases().get(0);
-        //when
-        //then
-        if(savedUser1.id() != 2) {
-            assertThatThrownBy(()->userRepositoryImp.deleteUserPhrase(2,phraseToDelete))
-                    .isInstanceOf(NoSuchElementException.class);
-        }else{
-            assertThatThrownBy(()->userRepositoryImp.deleteUserPhrase(3,phraseToDelete))
-                    .isInstanceOf(NoSuchElementException.class);
-        }
-    }
-
-    @Test
-    @Sql(statements = "SET FOREIGN_KEY_CHECKS = 0")
-    @Sql(statements = "truncate game_table")
-    @Sql(statements = "truncate games")
-    @Sql(statements = "truncate phrases")
-    @Sql(statements = "truncate users")
-    @Sql(statements = "truncate users_phrases")
-    @Sql(statements = "SET FOREIGN_KEY_CHECKS = 1")
-    public void should_get_all_users(){
+    public void should_get_all_users() {
         //given
         User user1 = createNewUser("user1");
         User user2 = createNewUser("user2");
@@ -204,18 +107,11 @@ class UserRepositoryImpTest {
         List<User> users = userRepositoryImp.getAll();
         //then
         assertThat(users.size()).isEqualTo(3);
-        assertThat(users).contains(savedUser1,savedUser2,savedUser3);
+        assertThat(users).contains(savedUser1, savedUser2, savedUser3);
     }
 
     @Test
-    @Sql(statements = "SET FOREIGN_KEY_CHECKS = 0")
-    @Sql(statements = "truncate game_table")
-    @Sql(statements = "truncate games")
-    @Sql(statements = "truncate phrases")
-    @Sql(statements = "truncate users")
-    @Sql(statements = "truncate users_phrases")
-    @Sql(statements = "SET FOREIGN_KEY_CHECKS = 1")
-    public void should_find_user_by_id(){
+    public void should_find_user_by_id() {
         //given
         User user1 = createNewUser("user1");
         User user2 = createNewUser("user2");
@@ -225,38 +121,26 @@ class UserRepositoryImpTest {
         Integer userId = savedUser2.id();
 
         //when
-        Optional<User> userFound = userRepositoryImp.findUserById(userId);
+        Optional<User> actualUser2 = userRepositoryImp.findUserById(userId);
         //then
-        assertThat(userFound).isNotEmpty();
-        assertThat(userFound.get().name()).isEqualTo("user2");
+        assertThat(actualUser2).isNotEmpty();
+        assertThat(actualUser2.get()).isEqualTo(savedUser2);
     }
+
     @Test
-    @Sql(statements = "SET FOREIGN_KEY_CHECKS = 0")
-    @Sql(statements = "truncate game_table")
-    @Sql(statements = "truncate games")
-    @Sql(statements = "truncate phrases")
-    @Sql(statements = "truncate users")
-    @Sql(statements = "truncate users_phrases")
-    @Sql(statements = "SET FOREIGN_KEY_CHECKS = 1")
-    public void should_return_empty_optional_when_not_found_user(){
+    public void should_return_empty_optional_when_not_found_user() {
         //given
         User user = createNewUser("user1");
         userRepositoryImp.addNew(user);
         Integer userId = 10;
         //when
-        Optional<User> userFound = userRepositoryImp.findUserById(userId);
+        Optional<User> savedUser = userRepositoryImp.findUserById(userId);
         //then
-        assertThat(userFound).isEmpty();
+        assertThat(savedUser).isEmpty();
     }
+
     @Test
-    @Sql(statements = "SET FOREIGN_KEY_CHECKS = 0")
-    @Sql(statements = "truncate game_table")
-    @Sql(statements = "truncate games")
-    @Sql(statements = "truncate phrases")
-    @Sql(statements = "truncate users")
-    @Sql(statements = "truncate users_phrases")
-    @Sql(statements = "SET FOREIGN_KEY_CHECKS = 1")
-    public void should_show_all_categories_for_given_user(){
+    public void should_show_all_categories_for_given_user() {
         //given
         User user1 = createNewUser("user1");
         User savedUser1 = userRepositoryImp.addNew(user1);
@@ -269,10 +153,10 @@ class UserRepositoryImpTest {
         Phrase phrase3 = createNewPhrase();
         phrase3.setCategoryName("Animals");
 
-        userRepositoryImp.addPhrase(savedUser1.id(),phrase1);
-        userRepositoryImp.addPhrase(savedUser1.id(),phrase2);
-        userRepositoryImp.addPhrase(savedUser1.id(),phrase3);
-        userRepositoryImp.addPhrase(savedUser2.id(),phrase3);
+        userRepositoryImp.addPhrase(savedUser1.id(), phrase1);
+        userRepositoryImp.addPhrase(savedUser1.id(), phrase2);
+        userRepositoryImp.addPhrase(savedUser1.id(), phrase3);
+        userRepositoryImp.addPhrase(savedUser2.id(), phrase3);
 
         //when
         List<String> categories = userRepositoryImp.findAllCategoriesForUser(savedUser1.id());
@@ -281,15 +165,9 @@ class UserRepositoryImpTest {
         assertThat(categories.size()).isEqualTo(2);
         assertThat(categories).contains("Animals", "Cars");
     }
+
     @Test
-    @Sql(statements = "SET FOREIGN_KEY_CHECKS = 0")
-    @Sql(statements = "truncate game_table")
-    @Sql(statements = "truncate games")
-    @Sql(statements = "truncate phrases")
-    @Sql(statements = "truncate users")
-    @Sql(statements = "truncate users_phrases")
-    @Sql(statements = "SET FOREIGN_KEY_CHECKS = 1")
-    public void should_find_all_phrases_with_the_same_category_for_given_user(){
+    public void should_find_all_phrases_with_the_same_category_for_given_user() {
         //given
         User user1 = createNewUser("user1");
         User savedUser1 = userRepositoryImp.addNew(user1);
@@ -302,13 +180,13 @@ class UserRepositoryImpTest {
         Phrase phrase3 = createNewPhrase();
         phrase3.setCategoryName("Animals");
 
-        userRepositoryImp.addPhrase(savedUser1.id(),phrase1);
-        userRepositoryImp.addPhrase(savedUser1.id(),phrase2);
-        userRepositoryImp.addPhrase(savedUser1.id(),phrase3);
-        userRepositoryImp.addPhrase(savedUser2.id(),phrase3);
+        userRepositoryImp.addPhrase(savedUser1.id(), phrase1);
+        userRepositoryImp.addPhrase(savedUser1.id(), phrase2);
+        userRepositoryImp.addPhrase(savedUser1.id(), phrase3);
+        userRepositoryImp.addPhrase(savedUser2.id(), phrase3);
 
         //when
-        List<Phrase> phrases = userRepositoryImp.findByCategoryName(savedUser1.id(),"Animals");
+        List<Phrase> phrases = userRepositoryImp.findByCategoryName(savedUser1.id(), "Animals");
 
         //then
         assertThat(phrases.size()).isEqualTo(2);
@@ -316,12 +194,12 @@ class UserRepositoryImpTest {
     }
 
 
-    private User createNewUser(String name){
-        User user = new User(null,name);
+    private User createNewUser(String name) {
+        User user = new User(null, name);
         return user;
     }
 
-    private Phrase createNewPhrase(){
+    private Phrase createNewPhrase() {
         Phrase phrase = new Phrase();
         phrase.setTypeOfPhrase(Type.WORD);
         phrase.setCategoryName("categoryName");
@@ -329,6 +207,12 @@ class UserRepositoryImpTest {
         phrase.setEnglishVersion("english");
         phrase.setAlreadyKnown(false);
         phrase.setNumberOfRepetitions(0);
+        return phrase;
+    }
+
+    private Phrase createNewPhrase(Integer id) {
+        Phrase phrase = createNewPhrase();
+        phrase.setId(id);
         return phrase;
     }
 

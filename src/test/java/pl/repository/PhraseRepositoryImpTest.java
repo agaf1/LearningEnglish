@@ -9,175 +9,111 @@ import pl.service.domain.Type;
 
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
+@Sql("/clean-db.sql")
 class PhraseRepositoryImpTest {
 
     @Autowired
-    private PhraseRepositoryImp phraseRepositoryImp;
+    private PhraseRepository phraseRepository;
 
     @Test
-    @Sql(statements = "SET FOREIGN_KEY_CHECKS = 0")
-    @Sql(statements = "truncate game_table")
-    @Sql(statements = "truncate games")
-    @Sql(statements = "truncate phrases")
-    @Sql(statements = "truncate users")
-    @Sql(statements = "truncate users_phrases")
-    @Sql(statements = "SET FOREIGN_KEY_CHECKS = 1")
-    public void should_save_phrase(){
-        //given
-        Phrase phrase = createNewPhrase();
-        //when
-        Phrase savedPhrase = phraseRepositoryImp.add(phrase);
-        //then
-        assertThat(savedPhrase.getId()).isNotNull();
 
-        assertThat(savedPhrase.getTypeOfPhrase()).isEqualTo(phrase.getTypeOfPhrase());
-        assertThat(savedPhrase.getCategoryName()).isEqualTo(phrase.getCategoryName());
-        assertThat(savedPhrase.getPolishVersion()).isEqualTo(phrase.getPolishVersion());
-        assertThat(savedPhrase.getEnglishVersion()).isEqualTo(phrase.getEnglishVersion());
+    public void should_find_phrase_by_id() {
+        //given
+        Phrase savedPhrase1 = phraseRepository.add(createNewPhrase());
+        Phrase savedPhrase2 = phraseRepository.add(createNewPhrase());
+
+        //when
+        Optional<Phrase> actualPhrase1 = phraseRepository.findById(savedPhrase1.getId());
+        Optional<Phrase> actualPhrase2 = phraseRepository.findById(savedPhrase2.getId());
+        //then
+        assertThat(actualPhrase1.get()).isEqualTo(savedPhrase1);
+        assertThat(actualPhrase2.get()).isEqualTo(savedPhrase2);
     }
 
     @Test
-    @Sql(statements = "SET FOREIGN_KEY_CHECKS = 0")
-    @Sql(statements = "truncate game_table")
-    @Sql(statements = "truncate games")
-    @Sql(statements = "truncate phrases")
-    @Sql(statements = "truncate users")
-    @Sql(statements = "truncate users_phrases")
-    @Sql(statements = "SET FOREIGN_KEY_CHECKS = 1")
-    public void should_find_phrase_by_id(){
+
+    public void should_not_found_phrase() {
         //given
-        Phrase phrase1 = createNewPhrase();
-        Phrase phrase2 = createNewPhrase();
-        Phrase savedPhrase1 = phraseRepositoryImp.add(phrase1);
-        Phrase savedPhrase2 = phraseRepositoryImp.add(phrase2);
-        Integer phraseId = savedPhrase2.getId();
-        //when
-        Optional<Phrase> result = phraseRepositoryImp.findById(phraseId);
-        //then
-        assertThat(result).isNotEmpty();
-        assertThat(result.get().getId()).isEqualTo(phraseId);
-        assertThat(result.get().getEnglishVersion()).isEqualTo(phrase2.getEnglishVersion());
-    }
-    @Test
-    @Sql(statements = "SET FOREIGN_KEY_CHECKS = 0")
-    @Sql(statements = "truncate game_table")
-    @Sql(statements = "truncate games")
-    @Sql(statements = "truncate phrases")
-    @Sql(statements = "truncate users")
-    @Sql(statements = "truncate users_phrases")
-    @Sql(statements = "SET FOREIGN_KEY_CHECKS = 1")
-    public void should_not_found_phrase(){
-        //given
-        Phrase phrase1 = createNewPhrase();
-        Phrase phrase2 = createNewPhrase();
-        Phrase savedPhrase1 = phraseRepositoryImp.add(phrase1);
-        Phrase savedPhrase2 = phraseRepositoryImp.add(phrase2);
+
+        Phrase savedPhrase1 = phraseRepository.add(createNewPhrase());
+
         Integer phraseId = 15;
         //when
-        Optional<Phrase> result = phraseRepositoryImp.findById(phraseId);
+        Optional<Phrase> result = phraseRepository.findById(phraseId);
         //then
         assertThat(result).isEmpty();
     }
 
     @Test
-    @Sql(statements = "SET FOREIGN_KEY_CHECKS = 0")
-    @Sql(statements = "truncate game_table")
-    @Sql(statements = "truncate games")
-    @Sql(statements = "truncate phrases")
-    @Sql(statements = "truncate users")
-    @Sql(statements = "truncate users_phrases")
-    @Sql(statements = "SET FOREIGN_KEY_CHECKS = 1")
-    public void should_find_phrase_by_polishVersion(){
+    public void should_find_phrase_by_polishVersion() {
         //given
-        Phrase phrase1 = createNewPhrase();
-        phrase1.setPolishVersion("polish1");
-        Phrase phrase2 = createNewPhrase();
-        phrase2.setPolishVersion("polish2");
-        Phrase savedPhrase1 = phraseRepositoryImp.add(phrase1);
-        Phrase savedPhrase2 = phraseRepositoryImp.add(phrase2);
+        Phrase savedPhrase1 = phraseRepository.add(createPolishPhrase("polish1"));
+        Phrase savedPhrase2 = phraseRepository.add(createPolishPhrase("polish2"));
 
         //when
-        Optional<Phrase> result = phraseRepositoryImp.findByPolishVersion(savedPhrase1.getPolishVersion());
+        Optional<Phrase> result = phraseRepository.findByPolishVersion(savedPhrase1.getPolishVersion());
         //then
         assertThat(result).isNotEmpty();
-        assertThat(result.get().getId()).isEqualTo(savedPhrase1.getId());
+        assertThat(result.get()).isEqualTo(savedPhrase1);
     }
 
     @Test
-    @Sql(statements = "SET FOREIGN_KEY_CHECKS = 0")
-    @Sql(statements = "truncate game_table")
-    @Sql(statements = "truncate games")
-    @Sql(statements = "truncate phrases")
-    @Sql(statements = "truncate users")
-    @Sql(statements = "truncate users_phrases")
-    @Sql(statements = "SET FOREIGN_KEY_CHECKS = 1")
-    public void should_not_find_phrase_by_polishVersion(){
+    public void should_not_find_phrase_by_polishVersion() {
         //given
-        Phrase phrase1 = createNewPhrase();
-        phrase1.setPolishVersion("polish1");
-        Phrase phrase2 = createNewPhrase();
-        phrase2.setPolishVersion("polish2");
-        Phrase savedPhrase1 = phraseRepositoryImp.add(phrase1);
-        Phrase savedPhrase2 = phraseRepositoryImp.add(phrase2);
+        Phrase savedPhrase1 = phraseRepository.add(createPolishPhrase("polish1"));
+        Phrase savedPhrase2 = phraseRepository.add(createPolishPhrase("polish2"));
         String word = "nothing";
         //when
-        Optional<Phrase> result = phraseRepositoryImp.findByPolishVersion(word);
+        Optional<Phrase> result = phraseRepository.findByPolishVersion(word);
         //then
         assertThat(result).isEmpty();
     }
+
     @Test
-    @Sql(statements = "SET FOREIGN_KEY_CHECKS = 0")
-    @Sql(statements = "truncate game_table")
-    @Sql(statements = "truncate games")
-    @Sql(statements = "truncate phrases")
-    @Sql(statements = "truncate users")
-    @Sql(statements = "truncate users_phrases")
-    @Sql(statements = "SET FOREIGN_KEY_CHECKS = 1")
-    public void should_find_phrase_by_englishVersion(){
+
+    public void should_find_phrase_by_englishVersion() {
         //given
-        Phrase phrase1 = createNewPhrase();
-        phrase1.setEnglishVersion("english1");
-        Phrase phrase2 = createNewPhrase();
-        phrase2.setEnglishVersion("english2");
-        Phrase savedPhrase1 = phraseRepositoryImp.add(phrase1);
-        Phrase savedPhrase2 = phraseRepositoryImp.add(phrase2);
+
+        Phrase savedPhrase1 = phraseRepository.add(createEnglishPhrase("english1"));
+        Phrase savedPhrase2 = phraseRepository.add(createEnglishPhrase("english2"));
 
         //when
-        Optional<Phrase> result = phraseRepositoryImp.findByEnglishVersion(savedPhrase1.getEnglishVersion());
+        Optional<Phrase> actualEnglishVersion = phraseRepository.findByEnglishVersion(savedPhrase1.getEnglishVersion());
+
         //then
-        assertThat(result).isNotEmpty();
-        assertThat(result.get().getId()).isEqualTo(savedPhrase1.getId());
+        assertThat(actualEnglishVersion).isNotEmpty();
+        assertThat(actualEnglishVersion.get()).isEqualTo(savedPhrase1);
     }
 
     @Test
-    @Sql(statements = "SET FOREIGN_KEY_CHECKS = 0")
-    @Sql(statements = "truncate game_table")
-    @Sql(statements = "truncate games")
-    @Sql(statements = "truncate phrases")
-    @Sql(statements = "truncate users")
-    @Sql(statements = "truncate users_phrases")
-    @Sql(statements = "SET FOREIGN_KEY_CHECKS = 1")
-    public void should_not_find_phrase_by_englishVersion(){
+
+    public void should_not_find_phrase_by_englishVersion() {
         //given
-        Phrase phrase1 = createNewPhrase();
-        phrase1.setEnglishVersion("english1");
-        Phrase phrase2 = createNewPhrase();
-        phrase2.setEnglishVersion("english1");
-        Phrase savedPhrase1 = phraseRepositoryImp.add(phrase1);
-        Phrase savedPhrase2 = phraseRepositoryImp.add(phrase2);
+        Phrase savedPhrase1 = phraseRepository.add(createEnglishPhrase("english1"));
+        Phrase savedPhrase2 = phraseRepository.add(createEnglishPhrase("english2"));
+
         String word = "nothing";
         //when
-        Optional<Phrase> result = phraseRepositoryImp.findByEnglishVersion(word);
+        Optional<Phrase> result = phraseRepository.findByEnglishVersion(word);
         //then
         assertThat(result).isEmpty();
     }
 
 
-    private Phrase createNewPhrase(){
+    private Phrase createPolishPhrase(String polishVersion) {
+        Phrase phrase = createNewPhrase();
+        phrase.setPolishVersion(polishVersion);
+        return phrase;
+    }
+    private Phrase createEnglishPhrase(String version) {
+        Phrase phrase = createNewPhrase();
+        phrase.setEnglishVersion(version);
+        return phrase;
+    }
+    private Phrase createNewPhrase() {
         Phrase phrase = new Phrase();
         phrase.setTypeOfPhrase(Type.WORD);
         phrase.setCategoryName("categoryName");

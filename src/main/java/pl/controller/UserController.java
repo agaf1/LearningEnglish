@@ -1,7 +1,6 @@
 package pl.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,17 +14,12 @@ import java.util.List;
 
 
 @Controller
+@RequiredArgsConstructor
 public class UserController {
 
-    //TODO zalecana praktyka jest wstrzykiwanie przez kontruktor, ulatwia to psianie testow
-    // https://nofluffjobs.com/pl/log/wiedza-it/dependency-injection-w-springu/
-    // informacje w sekcji Który sposób wstrzykiwania zależności wybrać?
+    private final UserService userService;
+    private final UserMapper userMapper;
 
-    // lombok ulatw wstrzykniecie przez kontstruktor uzywajac @RequiredArgsConstructor
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private UserMapper userMapper;
     @GetMapping(path = "/users")
     public String showAllUsers(Model model){
         List<User> users = userService.getAll();

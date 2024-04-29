@@ -6,35 +6,32 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import pl.service.domain.*;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
+@Sql("/clean-db.sql")
 class GameTableRepositoryImpTest {
 
     @Autowired
-    private GameTableRepositoryImp gameTableRepositoryImp;
+    private GameTableRepository gameTableRepositoryImp;
     @Autowired
-    private UserRepositoryImp userRepositoryImp;
+    private UserRepository userRepositoryImp;
     @Autowired
-    private GameJpa gameJpa;
+    private GameRepository gameRepository;
     @Autowired
     private MapperGameEntity mapperGameEntity;
     @Autowired
-    private PhraseRepositoryImp phraseRepositoryImp;
+    private PhraseRepository phraseRepositoryImp;
 
     @Test
-    @Sql(statements = "SET FOREIGN_KEY_CHECKS = 0")
-    @Sql(statements = "truncate game_table")
-    @Sql(statements = "truncate games")
-    @Sql(statements = "truncate phrases")
-    @Sql(statements = "truncate users")
-    @Sql(statements = "truncate users_phrases")
-    @Sql(statements = "SET FOREIGN_KEY_CHECKS = 1")
     public void should_save_to_DB(){
         //given
         GameTable gameTable = createDataInDB();
         //when
         GameTable result = gameTableRepositoryImp.save(gameTable);
+
         //then
         assertThat(result.getId()).isNotNull();
         assertThat(result.getGameId()).isEqualTo(gameTable.getGameId());
@@ -43,12 +40,6 @@ class GameTableRepositoryImpTest {
     }
 
     private GameTable createDataInDB(){
-        User user = new User(null,"user1");
-        Integer userId = userRepositoryImp.addNew(user).id();
-
-        Game game = new Game(null,"game1");
-        Integer gameId = gameJpa.save(mapperGameEntity.mapToEntity(game)).getId();
-
         Phrase phrase = new Phrase();
         phrase.setTypeOfPhrase(Type.WORD);
         phrase.setCategoryName("categoryName");
@@ -56,15 +47,20 @@ class GameTableRepositoryImpTest {
         phrase.setEnglishVersion("english");
         phrase.setAlreadyKnown(false);
         phrase.setNumberOfRepetitions(0);
-        userRepositoryImp.addPhrase(userId,phrase);
-        Phrase savedPhrase = phraseRepositoryImp.findByEnglishVersion("english").get();
+
+        User newUser = new User(null,"user1", List.of(phrase));
+        User user = userRepositoryImp.addNew(newUser);
+
+        Game newGame = new Game(null,"game1");
+        Game game = gameRepository.save(newGame);
 
         GameTable gameTable = new GameTable();
-        gameTable.setUserId(userId);
-        gameTable.setGameId(gameId);
-        gameTable.setPhrase(savedPhrase);
+        gameTable.setUserId(user.id());
+        gameTable.setGameId(game.id());
+        gameTable.setPhrase(user.phrases().get(0));
 
         return gameTable;
+
     }
 
 }
