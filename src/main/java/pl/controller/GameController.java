@@ -55,11 +55,13 @@ public class GameController {
     }
 
     @PostMapping(path = "/user/{userId}/games/{gameId}/{categoryName}")
-    public void startTheGame(@PathVariable Integer userId,
-                             @PathVariable Integer gameId,
-                             @PathVariable String categoryName) {
+    public String startTheGame(@PathVariable Integer userId,
+                               @PathVariable Integer gameId,
+                               @PathVariable String categoryName,
+                               Model model) {
         gameService.prepareTheGame(userId, gameId, categoryName);
-
+        model.addAttribute("userId",userId);
+        return gameService.startGame(gameId);
     }
 
 

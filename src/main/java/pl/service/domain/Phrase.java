@@ -13,4 +13,12 @@ public class Phrase {
     private String englishVersion;
     private boolean alreadyKnown;
     private int numberOfRepetitions;
+
+    public boolean isEnglishEqual(String englishVersion){
+        return this.englishVersion.equals(englishVersion);
+    }
+
+    public void increaseRepetition(){
+        numberOfRepetitions ++;
+    }
 }

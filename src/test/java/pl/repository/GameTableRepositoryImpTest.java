@@ -39,6 +39,38 @@ class GameTableRepositoryImpTest {
         assertThat(result.getPhrase().getId()).isEqualTo(gameTable.getPhrase().getId());
     }
 
+    @Test
+    public void should_delete_all_record_from_game_table(){
+        //given
+        GameTable gameTable = createDataInDB();
+        GameTable result = gameTableRepositoryImp.save(gameTable);
+        //when
+        gameTableRepositoryImp.clearAllGameTable();
+        //then
+        List<GameTable> actual = gameTableRepositoryImp.getAll();
+        assertThat(actual).isEmpty();
+    }
+
+    @Test
+    public void should_delete_phrase_from_game_table_by_phrase_id(){
+        //given
+        GameTable gameTable = createDataInDB();
+        GameTable result = gameTableRepositoryImp.save(gameTable);
+        Integer phraseId = result.getPhrase().getId();
+
+        assertThat(result).isNotNull();
+
+        //when
+        gameTableRepositoryImp.deletePhrase(phraseId);
+        //then
+        List<GameTable> actualResult = gameTableRepositoryImp.getAll();
+
+        assertThat(actualResult).isEmpty();
+
+    }
+
+
+
     private GameTable createDataInDB(){
         Phrase phrase = new Phrase();
         phrase.setTypeOfPhrase(Type.WORD);
@@ -60,7 +92,6 @@ class GameTableRepositoryImpTest {
         gameTable.setPhrase(user.phrases().get(0));
 
         return gameTable;
-
     }
 
 }

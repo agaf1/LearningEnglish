@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div> Translate this word: (Przetlumacz podane slowo:)</div>
+<input type="text" name="polishVersion" value="{{phrase.polishVersion}}"/>
+
+
+<form action="/{{userId}}/flashcards/translate/{{phrase.id}}" method="post">
+    <label>
+        <input type="text" name="englishVersion"/>
+    </label>
+    <input type="submit"/>
+</form>
+</body>
+</html>

@@ -16,7 +16,8 @@ class GameTableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Integer gameTableId;
+
     private Integer userId;
     private Integer gameId;
     private Integer phraseId;
@@ -33,7 +34,7 @@ class GameTableEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof GameTableEntity that)) return false;
-        return id != null && Objects.equals(id, that.id);
+        return gameTableId != null && Objects.equals(gameTableId, that.gameTableId);
     }
 
     @Override
@@ -43,6 +44,7 @@ class GameTableEntity {
 
     public static GameTableEntity create(GameTable gameTable){
         GameTableEntity gameTableEntity = new GameTableEntity();
+        gameTableEntity.setGameTableId(gameTable.getId());
         gameTableEntity.setUserId(gameTable.getUserId());
         gameTableEntity.setGameId(gameTable.getGameId());
         gameTableEntity.setPhraseId(gameTable.getPhrase().getId());
@@ -57,7 +59,7 @@ class GameTableEntity {
 
     public static GameTable getGameTable(GameTableEntity gameTableEntity){
         GameTable gameTable = new GameTable();
-        gameTable.setId(gameTableEntity.getId());
+        gameTable.setId(gameTableEntity.getGameTableId());
         gameTable.setUserId(gameTableEntity.getUserId());
         gameTable.setGameId(gameTableEntity.getGameId());
 
