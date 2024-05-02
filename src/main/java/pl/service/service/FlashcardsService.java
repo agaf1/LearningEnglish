@@ -7,7 +7,9 @@ import pl.service.domain.AnswerResult;
 import pl.service.domain.GameTable;
 import pl.service.domain.Phrase;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -19,17 +21,15 @@ public class FlashcardsService {
 
     public boolean getListOfWord() {
         List<GameTable> gameTables = gameTableRepository.getAll();
-        if (gameTables.isEmpty()) {
-            return false;
-        }
-        return true;
+
+        return !gameTables.isEmpty();
     }
 
     public Phrase nextWord() {
 
         List<GameTable> gameTables = gameTableRepository.getAll();
 
-        List<Phrase> phrases = gameTables.stream().map(g -> g.getPhrase()).toList();
+        List<Phrase> phrases = gameTables.stream().map(GameTable::getPhrase).toList();
 
         List<Phrase> actualPhrases = prepareListOfPhrase(phrases);
 
@@ -46,27 +46,12 @@ public class FlashcardsService {
     }
 
     private List<Phrase> prepareListOfPhrase(List<Phrase> phrases) {
+        return phrases.stream()
+                .sorted(Comparator.comparingInt(Phrase::getNumberOfRepetitions))
+                .collect(Collectors.toList());
 
-        List<Phrase> actualPhrases = getByNumberOfRepetitions(phrases, 0);
-
-        if (actualPhrases.isEmpty()) {
-            actualPhrases = getByNumberOfRepetitions(phrases, 1);
-        }
-        if (actualPhrases.isEmpty()) {
-            actualPhrases = getByNumberOfRepetitions(phrases, 2);
-        }
-        if (actualPhrases.isEmpty()) {
-            actualPhrases = getByNumberOfRepetitions(phrases, 3);
-        }
-        if (actualPhrases.isEmpty()) {
-            actualPhrases = getByNumberOfRepetitions(phrases, 4);
-        }
-        return actualPhrases;
     }
 
-    private List<Phrase> getByNumberOfRepetitions(List<Phrase> phrases, int number) {
-        return phrases.stream().filter(p -> p.getNumberOfRepetitions() == number).toList();
-    }
 
     private GameTable findActualPhraseByPhraseId(Integer phraseId) {
         GameTable gameTable = gameTableRepository.getAll().stream()

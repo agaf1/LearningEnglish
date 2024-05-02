@@ -2,6 +2,9 @@ package pl.service.service;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -14,6 +17,7 @@ import pl.service.domain.Type;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.eq;
@@ -45,19 +49,26 @@ class FlashcardsServiceTest {
         //then
         assertThat(result).isTrue();
     }
-    @Test
-    public void should_return_first_phrase_from_list_of_gameTable(){
+    @ParameterizedTest
+    @MethodSource("gameTableProvider")
+    public void should_return_first_phrase_from_list_of_gameTable(List<GameTable> gameTables,Phrase expectedPhrase){
         //given
-        Mockito.when(gameTableRepository.getAll()).thenReturn(prepareListOfGameTable(3));
+        Mockito.when(gameTableRepository.getAll()).thenReturn(gameTables);
         //when
         Phrase phrase = flashcardsService.nextWord();
         //then
-        assertThat(phrase.getId()).isEqualTo(1);
-        assertThat(phrase.getNumberOfRepetitions()).isEqualTo(3);
+        assertThat(phrase).isEqualTo(expectedPhrase);
     }
 
+    static Stream<Arguments> gameTableProvider(){
+        Phrase phrase1 = createNewPhrase(1,"polish1","english1",0);
+        Phrase phrase2 = createNewPhrase(2,"polish2","english2",1);
+        GameTable gameTable1=createNewGameTable(1,phrase1);
+        GameTable gameTable2=createNewGameTable(2,phrase2);
+       return Stream.of(Arguments.of(List.of(gameTable1,gameTable2),phrase1));
+    }
     @Test
-    public void should_return_positive_answer() throws InstantiationException, IllegalAccessException {
+    public void should_return_positive_answer() {
         //given
         List<GameTable> gameTables = prepareListOfGameTable(0);
         Mockito.when(gameTableRepository.getAll()).thenReturn(gameTables);
@@ -81,7 +92,7 @@ class FlashcardsServiceTest {
 //    }
 
     @Test
-    public void should_return_negative_answer() throws InstantiationException, IllegalAccessException {
+    public void should_return_negative_answer() {
         //given
         List<GameTable> gameTables = prepareListOfGameTable(0);
         Mockito.when(gameTableRepository.getAll()).thenReturn(gameTables);
@@ -106,7 +117,7 @@ class FlashcardsServiceTest {
         return List.of(gameTable1,gameTable2);
     }
 
-    private Phrase createNewPhrase(Integer id, String polishVersion, String englishVersion, int numberOfRepetition){
+    private static Phrase createNewPhrase(Integer id, String polishVersion, String englishVersion, int numberOfRepetition){
         Phrase phrase = new Phrase();
         phrase.setId(id);
         phrase.setTypeOfPhrase(Type.WORD);
@@ -118,7 +129,7 @@ class FlashcardsServiceTest {
         return phrase;
     }
 
-    private GameTable createNewGameTable(Integer id, Phrase phrase){
+    private static GameTable createNewGameTable(Integer id, Phrase phrase){
         GameTable gameTable = new GameTable();
         gameTable.setGameId(1);
         gameTable.setUserId(1);
