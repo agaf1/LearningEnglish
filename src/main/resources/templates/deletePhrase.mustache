@@ -2,24 +2,29 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>deletePhrase</title>
+    <link rel="stylesheet" href="/static/css/mystyle.css">
 </head>
 <body>
+<div>
         <form action="/user/{{userId}}/phrases/delete" method="post">
-            Find a phrase to delete by: (znajdz wyrazenie do usuniecia wedlug:)<br>
+            <p>Find a phrase to delete by: (znajdz wyrazenie do usuniecia wedlug:)</p>
             <input type="radio" id="ID" name="typeOfData" value="ID"/>
             <label for="ID">ID</label><br>
             <input type="radio" id="polishVersion" name="typeOfData" value="polishVersion"/>
             <label for="polishVersion">Polish Version</label><br>
             <input type="radio" id="englishVersion" name="typeOfData" value="englishVersion"/>
             <label for="englishVersion">English Version</label><br>
+            <br>
             <label>
                 Enter a value (podaj wartosc)
                 <input type="text" name="value"/>
             </label><br>
+            <br>
             <input type="submit"/>
         </form>
-        <div><br></div>
+        <br>
         <li><a href="/user/{{userId}}/games"> USER PAGE (Strona uzytkownika) </a></li>
+</div>
 </body>
 </html>

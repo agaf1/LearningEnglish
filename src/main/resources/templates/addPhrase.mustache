@@ -2,32 +2,39 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>addPhrase</title>
+    <link rel="stylesheet" href="/static/css/mystyle.css">
 </head>
 <body>
+<div>
     <form action="/user/{{userId}}/phrases/create" method="post">
         <label>
             Category of phrase (kategoria wyrazenia)
             <input type="text" name="categoryName"/>
         </label><br>
-        Type of phrase (typ wyrazenia)  <br>
-                                        <input type="radio" id="WORD" name="typeOfPhrase" value="WORD"/>
-                                        <label for="WORD">WORD (slowka)</label><br>
-                                        <input type="radio" id="SENTENCE" name="typeOfPhrase" value="SENTENCE"/>
-                                        <label for="SENTENCE">SENTENCE (cale zdanie)</label><br>
-                                        <input type="radio" id="DIALOGUE" name="typeOfPhrase" value="DIALOGUE"/>
-                                        <label for="DIALOGUE">DIALOGUE (dialog) </label><br>
+
+        <p>Type of phrase (typ wyrazenia):</p>
+        <input type="radio" id="WORD" name="typeOfPhrase" value="WORD"/>
+        <label for="WORD">WORD (slowka)</label><br>
+        <input type="radio" id="SENTENCE" name="typeOfPhrase" value="SENTENCE"/>
+        <label for="SENTENCE">SENTENCE (cale zdanie)</label><br>
+        <input type="radio" id="DIALOGUE" name="typeOfPhrase" value="DIALOGUE"/>
+        <label for="DIALOGUE">DIALOGUE (dialog) </label><br>
+        <br>
         <label>
             Phrase in polish (wyrazenie po polsku)
             <input type="text" name="polishVersion">
         </label><br>
+        <br>
         <label>
             Phrase in english (wyrazenie po angielsku)
             <input type="text" name="englishVersion">
         </label><br>
+        <br>
         <input type="submit"/>
     </form>
-    <div><br></div>
+    <br>
     <li><a href="/user/{{userId}}/games"> USER PAGE (Strona uzytkownika) </a></li>
+</div>
 </body>
 </html>

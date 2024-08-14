@@ -2,27 +2,30 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>games</title>
+    <link rel="stylesheet" href="/static/css/mystyle.css">
 </head>
 <body>
-        <div>
-            <label>
-                Hello (Czesc)
-                <input type="text" name="userName" value="{{userName}}"/>
-            </label>
-        </div>
-        <div><br></div>
-        <li><a href="/user/{{userId}}/phrases"> Manage words (Zarzadzaj slowkami) </a></li>
-        <div><br></div>
-        <div> Select a game. (Wybierz gre.)</div>
-        <div><br></div>
+<div>
+
+    <label>
+        <h3>Hello (Czesc)
+            <input type="text" name="userName" value="{{userName}}"/></h3>
+    </label>
+
+    <br>
+    <li><a href="/user/{{userId}}/phrases"> Manage words (Zarzadzaj slowkami) </a></li>
+    <br>
+    <h3>Select a game. (Wybierz gre.)</h3>
     <ul>
         {{#games}}
-        <li><a href = "/user/{{userId}}/games/{{id}}"> {{id}} - {{name}} </a></li>
+            <li><a href="/user/{{userId}}/games/{{id}}"> {{id}} - {{name}} </a></li>
         {{/games}}
     </ul>
-        <div><br></div>
-        <div><br></div>
-        <li><a href="/home"> HOME (Strona startowa) </a></li>
+    <br>
+    <br>
+    <li><a href="/home"> HOME (Strona startowa) </a></li>
+
+</div>
 </body>
 </html>

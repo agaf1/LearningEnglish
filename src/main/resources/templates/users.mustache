@@ -2,16 +2,22 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>users</title>
+    <link rel="stylesheet" href="/static/css/mystyle.css">
 </head>
 <body>
-    <div> List of users: (Lista uzytkowników:)</div>
-    <div><br></div>
+<div>
+    <h3 class="uppercase">List of users:</h3>
+    <h3>(Lista uzytkowników:)</h3>
+    <br>
     <ul>
-      {{#users}}
-      <li><a href = "/user/{{id}}/games"> {{id}} - {{name}} </a></li>
-      {{/users}}
+        {{#users}}
+            <li><a href="/user/{{id}}/games"> {{id}} - {{name}} </a></li>
+        {{/users}}
     </ul>
-    <li><a href = "/users/add"> ADD (DODAJ) </a></li>
+    <li><a href="/users/add"> ADD (Dodaj) </a></li>
+    <br>
+    <li><a href="/home"> HOME (Strona startowa) </a></li>
+</div>
 </body>
 </html>

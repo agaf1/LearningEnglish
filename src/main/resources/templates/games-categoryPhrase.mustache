@@ -2,27 +2,28 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>games-categoryPhrase</title>
+    <link rel="stylesheet" href="/static/css/mystyle.css">
 </head>
 <body>
 <div>
     <label>
         <input type="text" name="userName" value="{{userName}}"/>
-        Select category of phrase (wybierz kategorie wyrazen)
+        <p>Select category of phrase (wybierz kategorie wyrazen)</p>
     </label>
-</div>
-<div><br></div>
-<ul>
-    {{#categories}}
-    <form action="/user/{{userId}}/games/{{gameId}}/{{.}}" method="post">
-        <li><input type="submit"  value="{{.}}" >  </input></li>
-    </form>
-    {{/categories}}
-</ul>
-<div><br></div>
-<li><a href="/user/{{userId}}/games"> USER PAGE (Strona uzytkownika) </a></li>
-<div><br></div>
-<li><a href="/home"> HOME (Strona startowa) </a></li>
 
+    <br>
+    <ul>
+        {{#categories}}
+            <form action="/user/{{userId}}/games/{{gameId}}/{{.}}" method="post">
+                <li><input type="submit" value="{{.}}"> </input></li>
+            </form>
+        {{/categories}}
+    </ul>
+    <br>
+    <li><a href="/user/{{userId}}/games"> USER PAGE (Strona uzytkownika) </a></li>
+    <br>
+    <li><a href="/home"> HOME (Strona startowa) </a></li>
+</div>
 </body>
 </html>
