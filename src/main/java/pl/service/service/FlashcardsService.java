@@ -26,14 +26,25 @@ public class FlashcardsService {
     }
 
     public Phrase nextWord() {
+        List<Phrase> actualPhrases = getPhrases();
 
+        return actualPhrases.stream().findFirst().orElseThrow();
+    }
+
+    public Phrase nextWordWithGivenId(Integer phraseId){
+        List<Phrase> actualPhrases = getPhrases();
+
+        return actualPhrases.stream().filter(phrase -> phraseId==phrase.getId()).findFirst().orElseThrow();
+    }
+
+    private List<Phrase> getPhrases() {
         List<GameTable> gameTables = gameTableRepository.getAll();
 
         List<Phrase> phrases = gameTables.stream().map(GameTable::getPhrase).toList();
 
         List<Phrase> actualPhrases = prepareListOfPhrase(phrases);
 
-        return actualPhrases.stream().findFirst().orElseThrow();
+        return actualPhrases;
     }
 
     public AnswerResult checkAnswer(Integer phraseId, String englishVersion) {

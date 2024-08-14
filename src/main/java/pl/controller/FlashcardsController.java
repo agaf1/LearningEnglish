@@ -30,6 +30,16 @@ public class FlashcardsController {
         return "flashcards-next-word";
     }
 
+    @GetMapping(path = "/{userId}/flashcards/{phraseId}")
+    public String nextWordWithGivenId(@PathVariable Integer userId, @PathVariable Integer phraseId, Model model) {
+
+        Phrase phrase = flashcardsService.nextWordWithGivenId(phraseId);
+
+        model.addAttribute("phrase", phrase);
+        model.addAttribute("userId", userId);
+        return "flashcards-next-word";
+    }
+
     @PostMapping(path = "/{userId}/flashcards/translate/{phraseId}")
     public String checkAnswer(@PathVariable Integer userId,
                               @PathVariable Integer phraseId,
@@ -37,13 +47,18 @@ public class FlashcardsController {
                               Model model) {
         AnswerResult result = flashcardsService.checkAnswer(phraseId, answerDTO.englishVersion());
         String massage;
+        boolean isWrongAnswer;
         if (result.isCorrect() == true) {
-            massage = "Good answer ! ";
+            massage = "Good answer!";
+            isWrongAnswer = false;
         } else {
             massage = "Wrong answer! Correct answer is: " + result.correctWord() ;
+            isWrongAnswer = true;
         }
         model.addAttribute("message",massage);
+        model.addAttribute("isWrongAnswer", isWrongAnswer);
         model.addAttribute("userId",userId);
+        model.addAttribute("phraseId",phraseId);
 
         return "flashcards-answer";
     }

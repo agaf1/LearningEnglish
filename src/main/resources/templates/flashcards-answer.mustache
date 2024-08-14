@@ -7,9 +7,14 @@
 </head>
 <body>
 <div>
-        <h3> {{message}}  </h3>
-        <br>
-        <li><a href="/{{userId}}/flashcards"> NEXT </a></li>
+    <h3> {{message}}  </h3>
+    <br>
+    {{#isWrongAnswer}}
+        <li><a href="/{{userId}}/flashcards/{{phraseId}}"> TRY AGAIN </a></li>
+    {{/isWrongAnswer}}
+    <br>
+    <li><a href="/{{userId}}/flashcards"> NEXT </a></li>
+
     <br>
     <br>
     <br>
